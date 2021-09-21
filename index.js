@@ -116,7 +116,7 @@ app.all("/api/bins/:bin", async (req, res) => {
     console.log(foundBin)
     foundBin.requests.push(newRequest)
     await foundBin.save()
-    res.json({"message": "received"})
+    res.status(200).json({"message": "received"})
   } catch (error) {
     res.status(500).send(error);
   }
