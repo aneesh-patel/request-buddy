@@ -1,3 +1,118 @@
 body {
   background: aqua;
 }
+
+div.Title {
+  display: flex;
+  justify-content: center;
+}
+
+ul {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+div.Request {
+  padding: 5px;
+  border: 2px solid black;
+  width: 100%;
+  margin-bottom: 10px;
+  background: whitesmoke;
+}
+
+h1 {
+  text-align: center;
+}
+
+div.Message h3 {
+  text-align: center;
+}
+
+div.Message h2 {
+  text-align: center;
+}
+
+div.Home {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+div.Message {
+  text-align: center;
+}
+
+input {
+  padding: 10px;
+  background: whitesmoke;
+  border-radius: 5px;
+}
+
+div.Main h2 {
+  text-align: center;
+  border: 2px solid black;
+  background: whitesmoke;
+  padding: 10px;
+  margin-right: 300px;
+  margin-left: 300px;
+}
+
+div.Main p {
+  text-align: center;
+}
+
+nav {
+  display: flex;
+  text-decoration: none;
+  justify-content: center;
+  background: whitesmoke;
+  align-items: center;
+  box-shadow: 0 0 25px 0 black;
+  margin-right: 300px;
+  margin-left: 300px;
+  height: 50px;
+}
+
+li {
+  display: inline;
+  text-decoration: none;
+  margin: 20px;
+}
+
+a {
+  display: inline;
+  text-decoration: none;
+}
+
+ul.Nav {
+  display: flex;
+  flex-direction: row;
+}
+
+h2.Url {
+  margin-right: 300px;
+  margin-left: 300px;
+}
+
+pre {
+  text-align: left;
+}
+
+div.Request p {
+  text-align: left;
+}
+
+
+div.Request b {
+  text-align: left;
+}
+
+div.Docs {
+  text-align: center;
+  background: whitesmoke;
+  margin-left: 300px;
+  margin-right: 300px;
+  margin-top: 70px;
+  padding: 15px;
+}

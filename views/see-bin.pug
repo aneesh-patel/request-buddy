@@ -1,0 +1,20 @@
+extends layout 
+
+block layout-content 
+ .View 
+    h1.Banner RequestBuddy
+    .Message 
+      h3 #{titleSub}
+      h2 #{binUrl}
+      .Title 
+        ul
+          each request in requests
+            .Request 
+              b METHOD
+              p #{request.method}
+              b HEADERS 
+              pre #{JSON.stringify(request.headers, null, 2)}
+              b BODY
+              pre #{JSON.stringify(request.body, null, 2) || "No body"}
+              b TIME
+              p #{request.createdAt}

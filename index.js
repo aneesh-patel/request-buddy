@@ -90,50 +90,47 @@ const RawData = mongoose.model('RawData', rawDataSchema);
  * Routes Definitions
  */
 
+// Homepage
 app.get("/", (req, res) => {
   res.render("index", { title: "Home" });
 })
 
+// Creates new bin
 app.post("/new-bin", async (req, res) => {
   newIdentifier = Math.round(Math.random()* 9999999999).toString()
-  
-
   try {
     console.log(newIdentifier)
     const newBin = new Bin({ id: newIdentifier })
     console.log(newBin)
     await newBin.save()
-    //res.render("new-bin", { title: "New Bin :)", binUrl: `https://example.com/${uniqueIdentifier}`})
     res.redirect(`/bin-created/${newBin.id}`)
     
   } catch (error) {
-    
     console.log(error)
     res.status(500).send(error);
   }
 });
 
+// Gives newly created bin URL
 app.get("/bin-created/:id", (req, res) => {
-  res.json({'url': `https://1eed-71-120-212-136.ngrok.io/api/bins/${req.params.id}`})
+  res.render("created-bin", { url: `https://1eed-71-120-212-136.ngrok.io/api/bins/${req.params.id}` })
+  //res.json({'url': `https://1eed-71-120-212-136.ngrok.io/api/bins/${req.params.id}`})
 })
 
+
+// Handles requests coming to a bin
 app.all("/api/bins/:bin", async (req, res) => {
   newIdentifier = Math.round(Math.random()* 9999999999).toString()
-  //console.log(req.IncomingMessage)
   try {
-    //console.log(req)
     // store raw data
     const reqData = util.inspect(req)
     console.log(reqData)
-    const newRawData = new RawData({
+    const newRawData = new RawData({ 
       id: Math.round(Math.random() * 9999999999).toString(),
       raw_request: reqData,
       request_id: newIdentifier,
     })
-
-    //console.log(newRawData)
-
-    await newRawData.save()
+    await newRawData.save() 
 
     // parse req and store request
     const newRequest = new Request({
@@ -143,12 +140,10 @@ app.all("/api/bins/:bin", async (req, res) => {
       method: req.method,
       bin: req.params.bin,
     });
-    //console.log(typeof req);
     await newRequest.save()
 
     // add request to bin
     const foundBin = await Bin.findOne({id: req.params.bin})
-    //console.log(foundBin)
     foundBin.requests.push(newRequest)
     await foundBin.save()
     res.status(200).json({"message": "received"})
@@ -156,11 +151,17 @@ app.all("/api/bins/:bin", async (req, res) => {
     console.log(error)
     res.status(500).send(error);
   }
+}) 
+
+// Handles showing requests that have been sent to your bin
+app.get("/api/bins/:bin/view", async (req, res) => {
+  const searchedBin = await Bin.findOne({ id: req.params.bin}).populate('requests')
+
+  res.render("see-bin", { titleSub: 'Your buddy ID:', binUrl: searchedBin.id, requests: searchedBin.requests.reverse() })
 })
 
-app.get("/api/bins/:bin", (req, res) => {
-  console.log(Bin.findOne({ id: req.params.bin}))
-  res.status(200).send("All good")
+app.get("/docs", (req, res) => {
+  res.render("docs", {})
 })
 
 /**
