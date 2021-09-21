@@ -1,0 +1,10 @@
+extends layout 
+
+block layout-content 
+  .View 
+    h1.Banner REQUESTBIN 
+    .Message 
+      .Title 
+        h3 Request a bin!
+        form(action="/new-bin" method="POST")
+          input(type="submit" value="click for ur bin")
