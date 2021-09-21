@@ -7,7 +7,8 @@
 const express = require("express");
 const path = require("path");
 const mongoose = require('mongoose');
-
+const util = require('util')
+const { parse, stringify, toJSON, fromJSON } = require('flatted')
 /**
  * App Variables
  */
@@ -70,6 +71,21 @@ const requestSchema = new mongoose.Schema(
 
 
 const Request = mongoose.model('Request', requestSchema);
+
+const rawDataSchema = new mongoose.Schema(
+  {
+    id: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+    raw_request: String,
+    request_id: { type: String },
+  },
+  { timestamps: true }
+)
+
+const RawData = mongoose.model('RawData', rawDataSchema);
 /**
  * Routes Definitions
  */
@@ -91,18 +107,35 @@ app.post("/new-bin", async (req, res) => {
     res.redirect(`/bin-created/${newBin.id}`)
     
   } catch (error) {
+    
+    console.log(error)
     res.status(500).send(error);
   }
 });
 
 app.get("/bin-created/:id", (req, res) => {
-  res.json({'url': `https://c770-71-120-212-136.ngrok.io/api/bins/${req.params.id}`})
+  res.json({'url': `https://1eed-71-120-212-136.ngrok.io/api/bins/${req.params.id}`})
 })
 
 app.all("/api/bins/:bin", async (req, res) => {
   newIdentifier = Math.round(Math.random()* 9999999999).toString()
-
+  //console.log(req.IncomingMessage)
   try {
+    //console.log(req)
+    // store raw data
+    const reqData = util.inspect(req)
+    console.log(reqData)
+    const newRawData = new RawData({
+      id: Math.round(Math.random() * 9999999999).toString(),
+      raw_request: reqData,
+      request_id: newIdentifier,
+    })
+
+    //console.log(newRawData)
+
+    await newRawData.save()
+
+    // parse req and store request
     const newRequest = new Request({
       id: newIdentifier,
       body: req.body,
@@ -110,14 +143,17 @@ app.all("/api/bins/:bin", async (req, res) => {
       method: req.method,
       bin: req.params.bin,
     });
-    console.log(newRequest)
+    //console.log(typeof req);
     await newRequest.save()
+
+    // add request to bin
     const foundBin = await Bin.findOne({id: req.params.bin})
-    console.log(foundBin)
+    //console.log(foundBin)
     foundBin.requests.push(newRequest)
     await foundBin.save()
     res.status(200).json({"message": "received"})
   } catch (error) {
+    console.log(error)
     res.status(500).send(error);
   }
 })
