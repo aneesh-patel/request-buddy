@@ -46,6 +46,7 @@ const binSchema = new mongoose.Schema(
       unique: true,
       required: true,
     },
+    requests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Request'}],
   },
   { timestamps: true }
 );
@@ -93,7 +94,7 @@ app.post("/new-bin", async (req, res) => {
 });
 
 app.get("/bin-created/:id", (req, res) => {
-  res.json({'url': `https://7575-71-120-212-136.ngrok.io/api/bins/${req.params.id}`})
+  res.json({'url': `https://d800-71-120-212-136.ngrok.io/api/bins/${req.params.id}`})
 })
 
 app.post("/api/bins/:bin", async (req, res) => {
@@ -103,10 +104,13 @@ app.post("/api/bins/:bin", async (req, res) => {
     const newRequest = new Request({
       id: newIdentifier,
       request: req.body,
-      bin: req.params.id,
+      bin: req.params.bin,
     });
     console.log(newRequest)
     await newRequest.save()
+    foundBin = Bin.findOne({id: req.params.bin})
+    foundBin.requests.push(newRequest)
+    await foundBin.save()
     res.json({"message": "received"})
   } catch (error) {
     res.status(500).send(error);
@@ -114,7 +118,7 @@ app.post("/api/bins/:bin", async (req, res) => {
 })
 
 app.get("/api/bins/:bin", (req, res) => {
-  console.log(Request.find({ bin: req.params.bin}))
+  console.log(Bin.findOne({ id: req.params.bin}))
   res.status(200).send("All good")
 })
 
