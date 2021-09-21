@@ -60,7 +60,9 @@ const requestSchema = new mongoose.Schema(
       unique: true,
       required: true,
     },
-    request: Object,
+    body: Object,
+    headers: {type: Object},
+    method: String,
     bin: { type: String },
   },
   { timestamps: true }
@@ -94,21 +96,24 @@ app.post("/new-bin", async (req, res) => {
 });
 
 app.get("/bin-created/:id", (req, res) => {
-  res.json({'url': `https://d800-71-120-212-136.ngrok.io/api/bins/${req.params.id}`})
+  res.json({'url': `https://c770-71-120-212-136.ngrok.io/api/bins/${req.params.id}`})
 })
 
-app.post("/api/bins/:bin", async (req, res) => {
+app.all("/api/bins/:bin", async (req, res) => {
   newIdentifier = Math.round(Math.random()* 9999999999).toString()
 
   try {
     const newRequest = new Request({
       id: newIdentifier,
-      request: req.body,
+      body: req.body,
+      headers: req.headers,
+      method: req.method,
       bin: req.params.bin,
     });
     console.log(newRequest)
     await newRequest.save()
-    foundBin = Bin.findOne({id: req.params.bin})
+    const foundBin = await Bin.findOne({id: req.params.bin})
+    console.log(foundBin)
     foundBin.requests.push(newRequest)
     await foundBin.save()
     res.json({"message": "received"})
