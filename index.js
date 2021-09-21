@@ -8,14 +8,13 @@ const express = require("express");
 const path = require("path");
 const mongoose = require('mongoose');
 
-
 /**
  * App Variables
  */
 
 
 const app = express();
-const port = process.env.PORT || 8000
+const port = process.env.PORT || 80
 
 
 
@@ -26,6 +25,7 @@ const port = process.env.PORT || 8000
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.json());
 
 mongoose.connect("mongodb+srv://admin:foobar@cluster0.dtu4l.mongodb.net/requestBinClone?retryWrites=true&w=majority",
   {
@@ -60,7 +60,7 @@ const requestSchema = new mongoose.Schema(
       required: true,
     },
     request: Object,
-    bin: { type: mongoose.Schema.Types.ObjectId, ref: 'Bin' },
+    bin: { type: String },
   },
   { timestamps: true }
 );
@@ -93,8 +93,31 @@ app.post("/new-bin", async (req, res) => {
 });
 
 app.get("/bin-created/:id", (req, res) => {
-  res.json({'url': `https://example.com/api/bins/${req.params.id}`})
+  res.json({'url': `https://7575-71-120-212-136.ngrok.io/api/bins/${req.params.id}`})
 })
+
+app.post("/api/bins/:bin", async (req, res) => {
+  newIdentifier = Math.round(Math.random()* 9999999999).toString()
+
+  try {
+    const newRequest = new Request({
+      id: newIdentifier,
+      request: req.body,
+      bin: req.params.id,
+    });
+    console.log(newRequest)
+    await newRequest.save()
+    res.json({"message": "received"})
+  } catch (error) {
+    res.status(500).send(error);
+  }
+})
+
+app.get("/api/bins/:bin", (req, res) => {
+  console.log(Request.find({ bin: req.params.bin}))
+  res.status(200).send("All good")
+})
+
 /**
  * Server Activation
  */
