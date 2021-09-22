@@ -113,7 +113,7 @@ app.post("/new-bin", async (req, res) => {
 
 // Gives newly created bin URL
 app.get("/bin-created/:id", (req, res) => {
-  res.render("created-bin", { url: `https://1eed-71-120-212-136.ngrok.io/api/bins/${req.params.id}` })
+  res.render("created-bin", { url: `https://aneesh-patel.com/api/bins/${req.params.id}` })
   //res.json({'url': `https://1eed-71-120-212-136.ngrok.io/api/bins/${req.params.id}`})
 })
 
@@ -124,7 +124,6 @@ app.all("/api/bins/:bin", async (req, res) => {
   try {
     // store raw data
     const reqData = util.inspect(req)
-    console.log(reqData)
     const newRawData = new RawData({ 
       id: Math.round(Math.random() * 9999999999).toString(),
       raw_request: reqData,
