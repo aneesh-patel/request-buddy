@@ -113,7 +113,7 @@ app.post("/new-bin", async (req, res) => {
 
 // Gives newly created bin URL
 app.get("/bin-created/:id", (req, res) => {
-  res.render("created-bin", { url: `https://aneesh-patel.com/api/bins/${req.params.id}` })
+  res.render("created-bin", { url: `https://rb.aneesh-patel.com/api/bins/${req.params.id}` })
   //res.json({'url': `https://1eed-71-120-212-136.ngrok.io/api/bins/${req.params.id}`})
 })
 
