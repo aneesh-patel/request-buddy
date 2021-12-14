@@ -2,6 +2,8 @@ extends layout
 
 block layout-content
   .Main
-    h1 Your new buddy is here! 
-    p Please don't lose your buddy URL or you will have to request a new one! 
+    h1(class="display-3") Your new buddy is here! 
+    p(class="h5") Please don't lose your buddy URL or you will have to request a new one! 
     h2.Url #{url}
+    h1(class="h4") To view requests made to your buddy, please visit the URL below:
+    h2.Url #{`${url}/view`}

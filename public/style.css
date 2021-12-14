@@ -1,16 +1,21 @@
-body {
+/* body {
   background: aqua;
-}
+} */
 
 div.Title {
   display: flex;
   justify-content: center;
+  margin-top: 10px;
 }
 
 ul {
   display: flex;
   justify-content: center;
   flex-direction: column;
+}
+
+div.Root {
+  margin-top: 20px;
 }
 
 div.Request {
@@ -56,6 +61,7 @@ div.Main h2 {
   padding: 10px;
   margin-right: 300px;
   margin-left: 300px;
+  margin-top: 20px;
 }
 
 div.Main p {

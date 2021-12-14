@@ -1,14 +1,14 @@
 extends layout 
 
 block layout-content 
-  .View 
-    h1.Banner RequestBuddy 
+  div(class="container")
+    h1.Banner(class="display-3") RequestBuddy 
     .Message 
       p RequestBuddy is meant to be a request bin clone where a buddy is analgous to a bin.
       p A buddy is essentially a public SSL certfied URL that can be used to integrate things like webhooks in your development process.
       p When you request a buddy you will be given a URL.
       p You can view all requests that go to your buddy by going to the url provided "/view" endpoint
       .Home
-        h3 Request a buddy!
+        h3(class="display-6") Request a buddy!
         form(action="/new-bin" method="POST")
-          input(type="submit" value="Click for your buddy")
+          input(type="submit" class="btn btn-primary" value="Click for your buddy")
